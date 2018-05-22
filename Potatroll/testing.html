@@ -4,7 +4,7 @@
 <head>
 	<meta charset="UTF-8" />
 	<title>Phaser - Making your first game, part 9</title>
-	<script src="//cdn.jsdelivr.net/phaser/2.2.2/phaser.min.js"></script>
+	<script src="//cdn.jsdelivr.net/phaser/2.6.2/phaser.min.js"></script>
 	<style type="text/css">
 		body {
 			margin: 0;
@@ -97,49 +97,6 @@
 			player.animations.add('left', [0, 1, 2, 3], 10, true);
 			player.animations.add('right', [5, 6, 7, 8], 10, true);
 
-			// potato1 = game.add.sprite(10, 0, 'potato');
-			// var scaleFactor = Math.random() * 0.3;
-			// potato1.scale.setTo(scaleFactor, scaleFactor);
-			// game.physics.arcade.enable(potato1);
-			// potato1.body.velocity.x = (1 - scaleFactor) * 100;
-			//
-			// potato2 = game.add.sprite(80, 0, 'potato');
-			// var scaleFactor = Math.random() * 0.3;
-			// potato2.scale.setTo(scaleFactor, scaleFactor);
-			// game.physics.arcade.enable(potato2);
-			// potato2.body.velocity.x = (1 - scaleFactor) * 100;
-			//
-			// potato3 = game.add.sprite(150, 0, 'potato');
-			// var scaleFactor = Math.random() * 0.3;
-			// potato3.scale.setTo(scaleFactor, scaleFactor);
-			// game.physics.arcade.enable(potato3);
-			// potato3.body.velocity.x = (1 - scaleFactor) * 100;
-			//
-			// potato4 = game.add.sprite(220, 0, 'potato');
-			// var scaleFactor = Math.random() * 0.3;
-			// potato4.scale.setTo(scaleFactor, scaleFactor);
-			// game.physics.arcade.enable(potato4);
-			// potato4.body.velocity.x = (1 - scaleFactor) * 100;
-			//
-			// potato5 = game.add.sprite(290, 0, 'potato');
-			// var scaleFactor = Math.random() * 0.3;
-			// potato5.scale.setTo(scaleFactor, scaleFactor);
-			// game.physics.arcade.enable(potato5);
-			// potato5.body.velocity.x = (1 - scaleFactor) * 100;
-			//
-			// potato6 = game.add.sprite(360, 0, 'potato');
-			// var scaleFactor = Math.random() * 0.3;
-			// potato6.scale.setTo(scaleFactor, scaleFactor);
-			// game.physics.arcade.enable(potato6);
-			// potato6.body.velocity.x = (1 - scaleFactor) * 100;
-			//
-			// potato7 = game.add.sprite(500, 0, 'potato');
-			// var scaleFactor = 0.6;
-			// potato7.scale.setTo(scaleFactor, scaleFactor);
-			// game.physics.arcade.enable(potato7);
-			// potato7.body.velocity.x = (1 - scaleFactor) * 100;
-
-
 			//  Finally some stars to collect
 			stars = game.add.group();
 
@@ -230,28 +187,6 @@
 			if (cursors.up.isDown && player.body.touching.down && hitPlatform) {
 				player.body.velocity.y = -350;
 			}
-
-			// game.physics.arcade.collide(potato1, potato2);
-			// game.physics.arcade.collide(potato1, potato3);
-			// game.physics.arcade.collide(potato1, potato4);
-			// game.physics.arcade.collide(potato1, potato5);
-			// game.physics.arcade.collide(potato1, potato6);
-			// game.physics.arcade.collide(potato1, potato7);
-			// game.physics.arcade.collide(potato2, potato3);
-			// game.physics.arcade.collide(potato2, potato4);
-			// game.physics.arcade.collide(potato2, potato5);
-			// game.physics.arcade.collide(potato2, potato6);
-			// game.physics.arcade.collide(potato2, potato7);
-			// game.physics.arcade.collide(potato3, potato4);
-			// game.physics.arcade.collide(potato3, potato5);
-			// game.physics.arcade.collide(potato3, potato6);
-			// game.physics.arcade.collide(potato3, potato7);
-			// game.physics.arcade.collide(potato4, potato5);
-			// game.physics.arcade.collide(potato4, potato6);
-			// game.physics.arcade.collide(potato4, potato7);
-			// game.physics.arcade.collide(potato5, potato6);
-			// game.physics.arcade.collide(potato5, potato7);
-			// game.physics.arcade.collide(potato6, potato7);
 
 			game.physics.arcade.collide(potatoes);
 
