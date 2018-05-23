@@ -14,7 +14,12 @@ Load.prototype = {
 
     // game.load.image('background', 'assets/grass.png');
     // game.load.image('menu', 'assets/potato spuds.png');
-    // game.load.image('potato', 'assets/1potato.png');
+    game.load.image('sky', 'assets/grass.png');
+    game.load.image('ground', 'assets/platform.png');
+    game.load.image('star', 'assets/star.png');
+    game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
+
+    game.load.image('potato', 'assets/1potato.png');
     // this.load.image('creature_1', 'assets/creature_1.png');
     // this.load.image('creature_2', 'assets/creature_2.png');
     // this.load.image('creature_3', 'assets/creature_3.png');
