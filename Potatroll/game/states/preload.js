@@ -1,36 +1,34 @@
-'use strict';
-function Preload() {
-  this.asset = null;
-  this.ready = false;
-}
 
-Preload.prototype = {
+var Preload = function (game){};
+
+Preload.protype = {
   preload: function() {
-    this.asset = this.add.sprite(this.width/2,this.height/2, 'preloader');
-    this.asset.anchor.setTo(0.5, 0.5);
+    this.game.add.sprite(this.game.world.centerX-100, this.game.world.centerY, 'preloader');
+    this.anchor.setTo(0.5, 0.5);
 
     this.load.onLoadComplete.addOnce(this.onLoadComplete, this);
-    this.load.setPreloadSprite(this.asset);
+    this.load.setPreloadSprite(loader);
     //this.load.image('menu', 'assets/menu.jpg');
-    this.load.image('background', 'assets/background.jpg');
-    // this.load.image('player', 'assets/player.png');
+
+    this.load.image('background', 'assets/grass.png');
+    game.load.image('menu', 'assets/potato_spuds.png');
+    game.load.image('potato', 'assets/1potato.png');
     // this.load.image('creature_1', 'assets/creature_1.png');
     // this.load.image('creature_2', 'assets/creature_2.png');
     // this.load.image('creature_3', 'assets/creature_3.png');
     // this.load.image('gameover', 'assets/gameover.jpg');
-
   },
   create: function() {
-    this.asset.cropEnabled = false;
+
+    //this.asset.cropEnabled = false;
+    this.background = this.game.add.sprite(0, 0, window.innerWidth, window.innerHeight, 'background');
   },
   update: function() {
     if(!!this.ready) {
-      this.game.state.start('background');
+      this.game.state.start('preload');
     }
   },
   onLoadComplete: function() {
     this.ready = true;
   }
 };
-
-module.exports = Preload;
