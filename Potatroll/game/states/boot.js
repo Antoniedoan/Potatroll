@@ -1,17 +1,18 @@
-
-'use strict';
-
-function Boot() {
-}
+var Boot = function (game){};
 
 Boot.prototype = {
   preload: function() {
     this.load.image('preloader', 'assets/preloader.gif');
   },
   create: function() {
+    this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+
+    //this.game.scale.refresh();
+
+    //this.game.add.sprite(this.game.world.centerX-100, this.game.world.centerY, 'preloader');
     this.game.input.maxPointers = 1;
     this.game.state.start('preload');
+    this.game.scale.pageAlignHorizontally = true;
+    this.game.scale.pageAlignVertically = true;
   }
 };
-
-module.exports = Boot;
