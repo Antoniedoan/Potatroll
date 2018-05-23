@@ -1,16 +1,12 @@
-'use strict';
+var game = new Phaser.Game(window.innerWidth/2 - 200, window.innerHeight/2, Phaser.AUTO, 'Potatroll');
 
 //global variables
-window.onload = function () {
-  var game = new Phaser.Game(800, 600, Phaser.AUTO, 'fkoff');
 
   // Game States
-  game.state.add('boot', require('./states/boot'));
+game.state.add('boot', Boot);
   // game.state.add('gameover', require('./states/gameover'));
-  // game.state.add('menu', require('./states/menu'));
-  // game.state.add('play', require('./states/play'));
-  game.state.add('preload', require('./states/preload'));
+game.state.add('menu', Menu);
+//game.state.add('play', Play);
+game.state.add('preload', Preload);
 
-
-  game.state.start('boot');
-};
+game.state.start('boot');
