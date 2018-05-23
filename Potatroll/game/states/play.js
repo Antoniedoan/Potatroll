@@ -4,6 +4,7 @@ var Play = function(game) {}
 var player;
 var potatoes;
 var grass;
+var bar;
 
 var cursors;
 
@@ -23,9 +24,11 @@ Play.prototype = {
 
         // The player and its settings
         player = game.add.sprite(400, 300, 'dude');
+        bar = game.add.sprite(400, 300, 'bar');
 
         //  We need to enable physics on the player
         game.physics.arcade.enable(player);
+        game.physics.arcade.enable(bar);
 
         //  Player physics properties. Prevents player from leaving the bounds of the game world.
         // player.body.collideWorldBounds = true;
@@ -45,22 +48,22 @@ Play.prototype = {
             var scaleFactor = (Math.random() * 0.2) + 0.1;
             potat.scale.setTo(scaleFactor, scaleFactor);
 
-            potat.body.velocity.x = (1 - scaleFactor) * 50;
+            potat.body.velocity.x = (1 - scaleFactor) * 30;
 
         }
 
         //  Our controls.
         cursors = game.input.keyboard.createCursorKeys();
 
-        game.camera.follow(player);
+        game.camera.follow(bar);
     },
 
     update: function() {
-        game.world.bounds.centerOn(player.x, player.y);
+        game.world.bounds.centerOn(bar.x, bar.y);
         game.camera.setBoundsToWorld();
 
         //  Reset the players velocity (movement)
-        player.body.velocity.x = 150;
+        bar.body.velocity.x = 0;
         player.body.velocity.y = 0;
 
         if (cursors.left.isDown) {
@@ -70,7 +73,7 @@ Play.prototype = {
             player.animations.play('left');
         } else if (cursors.right.isDown) {
             //  Move to the right
-            player.body.velocity.x = 150;
+            player.body.velocity.x = 300;
 
             player.animations.play('right');
         } else {
@@ -98,6 +101,7 @@ Play.prototype = {
         }
 
         game.physics.arcade.collide(potatoes);
+        game.physics.arcade.collide(potatoes, bar);
 
         grass.tilePosition.x = -game.camera.x;
         grass.tilePosition.y = -game.camera.y;

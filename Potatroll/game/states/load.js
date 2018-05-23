@@ -17,6 +17,7 @@ Load.prototype = {
     game.load.image('sky', 'assets/grass.png');
     game.load.image('ground', 'assets/platform.png');
     game.load.image('star', 'assets/star.png');
+    game.load.image('bar', 'assets/white bar.png');
     game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
 
     game.load.image('potato', 'assets/1potato.png');
