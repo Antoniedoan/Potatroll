@@ -3,9 +3,8 @@ var Load = function (game){};
 
 Load.prototype = {
   preload: function() {
-    console.log("hi");
     // this.game.add.sprite(this.game.world.centerX-100, this.game.world.centerY, 'preloader');
-    this.load.image('preloader', 'assets/cutlass.png');
+    this.load.image('preloader', 'assets/sky.png');
 
     // this.anchor.setTo(0.5, 0.5);
     //
@@ -26,13 +25,6 @@ Load.prototype = {
     //this.asset.cropEnabled = false;
     // var background = this.game.add.sprite(0, 0, 'background');
     this.game.add.sprite(this.game.world.centerX-100, this.game.world.centerY, 'preloader');
+    this.game.state.start('play');
   },
-  update: function() {
-    // if(!!this.ready) {
-    //   this.game.state.start('preload');
-    // }
-  },
-  onLoadComplete: function() {
-    this.ready = true;
-  }
 };
