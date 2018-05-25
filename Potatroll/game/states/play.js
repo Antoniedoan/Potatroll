@@ -3,6 +3,7 @@ var Play = function(game) {}
 
 var player;
 var potatoes;
+var potato;
 var grass;
 var bar;
 
@@ -10,9 +11,6 @@ var cursors;
 
 Play.prototype = {
     create: function() {
-
-        // game.world.setBounds(0, 0, 1400, 1400);
-        // game.camera.x += 50;
 
         //  We're going to be using physics, so enable the Arcade Physics system
         game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -24,15 +22,13 @@ Play.prototype = {
 
         // The player and its settings
         player = game.add.sprite(400, 300, 'dude');
-        bar = game.add.sprite(400, 300, 'bar');
+        bar = game.add.sprite(700, 300, 'bar');
 
         bar.anchor.setTo(0.5, 0.5);
 
         //  We need to enable physics on the player
         game.physics.arcade.enable(player);
         game.physics.arcade.enable(bar);
-
-        bar.body.mass = 1;
 
         //  Player physics properties. Prevents player from leaving the bounds of the game world.
         // player.body.collideWorldBounds = true;
@@ -47,12 +43,17 @@ Play.prototype = {
 
         for (var i = 0; i < 8; i++) {
 
-            var potat = potatoes.create(i * 90, 200, 'potato');
+            var potat = potatoes.create(i * 60, 250, 'potato');
+            potat.anchor.setTo(0.5, 0.5);
 
             var scaleFactor = (Math.random() * 0.1) + 0.1;
             potat.scale.setTo(scaleFactor, scaleFactor);
 
-            potat.body.velocity.x = (1 - scaleFactor) * 80;
+            potat.body.velocity.x = (1 - scaleFactor) * 20;
+
+            if(i === 1){
+                potato = potat;
+            }
 
         }
 
@@ -63,11 +64,11 @@ Play.prototype = {
     },
 
     update: function() {
-        game.world.bounds.centerOn(bar.x, bar.y);
+        game.world.bounds.centerOn(bar, 400, 400);
         game.camera.setBoundsToWorld();
 
         //  Reset the players velocity (movement)
-        // bar.body.velocity.x = 0;
+        bar.body.velocity.x = 40;
         player.body.velocity.y = 0;
 
         if (cursors.left.isDown) {
@@ -104,7 +105,7 @@ Play.prototype = {
             player.frame = 4;
         }
 
-        game.physics.arcade.collide(potatoes, bar);
+        // game.physics.arcade.collide(potatoes, bar);
         game.physics.arcade.collide(potatoes);
 
         grass.tilePosition.x = -game.camera.x;
