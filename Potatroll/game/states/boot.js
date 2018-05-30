@@ -14,6 +14,6 @@ Boot.prototype = {
 
     this.game.scale.pageAlignHorizontally = true;
     this.game.scale.pageAlignVertically = true;
-    this.game.state.start('load');
+    this.game.state.start('preload');
   }
 };

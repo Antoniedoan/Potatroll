@@ -167,6 +167,7 @@ Play.prototype = {
           return v === sortedPotatoes[i]
         }) && steps >=0) {
         //console.log(filledPotatoes);
+          steps = numOfPots - 1;
           this.game.state.start('winning');
       }
       //check losing
