@@ -13,6 +13,7 @@ Preload.prototype = {
     this.load.image('background', 'assets/grass.png');
     this.load.image('instruction', 'assets/potato_spuds.png');
     this.load.image('potato', 'assets/1potato.png');
+    //this.load.image('arrow', 'assets/arrowleft.png');
     // this.load.image('creature_1', 'assets/creature_1.png');
     // this.load.image('creature_2', 'assets/creature_2.png');
     // this.load.image('creature_3', 'assets/creature_3.png');

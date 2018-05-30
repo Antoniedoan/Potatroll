@@ -64,7 +64,7 @@ Play.prototype = {
       potato.scale.set(scaleFactor);
       potato.name = 'pot' + i;
       potato.events.onInputDown.add(this.onClick);
-      potato.body.velocity.y = -(1 - scaleFactor) * 10;
+      potato.body.velocity.y = -(1 - scaleFactor) * 2;
       // potato.body.collideWorldBounds = true;
       // potato.checkWorldBounds = true;
       // potato.events.onOutOfBounds.add(function(){
