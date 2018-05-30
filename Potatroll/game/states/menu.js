@@ -2,7 +2,7 @@ var Menu = function(game) {}
 
 Menu.prototype = {
   preload: function() {
-    game.load.spritesheet('playButton', '/assets/grass.png', 190, 70);
+    game.load.spritesheet('playButton', 'assets/grass.png', 190, 70);
 
   },
   create: function() {
