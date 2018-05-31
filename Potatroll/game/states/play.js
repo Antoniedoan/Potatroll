@@ -185,8 +185,16 @@ Play.prototype = {
 
         potatoes.forEach(function(child) {
             // console.log(child.y);
-
             if (child.y < 0){
+                var text = "Your potato is leaving the screen!";
+
+                var style = { font: "30px Calibri", fill: "#ffffff", align: "center" };
+
+                var t = game.add.text(game.world.centerX, game.world.centerY, text, style);
+                t.anchor.setTo(0.5, 0.5);
+            }
+
+            if (child.y < -50){
                 this.game.state.start('menu');
             }
             // child.checkWorldBounds = true;
