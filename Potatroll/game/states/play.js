@@ -104,8 +104,6 @@ Play.prototype = {
             //create maps of potato names and their positions
             position_potato[i] = potato;
             potatoName_position[potato.name] = i;
-
-            game.add.tween(potato.x).to({x:potato.x + 100}, 500, Phaser.Easing.Elastic.Out, true, 100, -1, true);
         }
         //var frameNames = Phaser.Animation.generateFrameNames('potatoe', 0, 24, '', 4);
         //potatoes.callAll('animations.add', 'animations', 'swim', frameNames, 30, true, false);
