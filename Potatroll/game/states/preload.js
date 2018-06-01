@@ -21,6 +21,9 @@ Preload.prototype = {
     this.load.audio('bgMusic', 'assets/bodenstaendig.mp3');
     this.load.audio('swapSound', 'assets/Mario_jump.mp3');
 
+    //  Load the Google WebFont Loader script
+    game.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
+
   },
   create: function() {
     //this.game.add.sprite(0, 0, window.innerWidth, window.innerHeight, 'background');

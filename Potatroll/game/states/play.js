@@ -41,8 +41,7 @@ Play.prototype = {
         //game.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
         game.load.spritesheet('replay', 'assets/grass.png', 190, 70);
 
-        //  Load the Google WebFont Loader script
-        game.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
+
     },
 
     create: function() {
@@ -99,12 +98,14 @@ Play.prototype = {
             potato.name = 'pot' + i;
             potato.events.onInputDown.add(this.onClick);
             potato.body.velocity.x = (1 - scaleFactor) * 10;
-            
+
             sortedPotatoes.push(potato.scale.x);
 
             //create maps of potato names and their positions
             position_potato[i] = potato;
             potatoName_position[potato.name] = i;
+
+            game.add.tween(potato.x).to({x:potato.x + 100}, 500, Phaser.Easing.Elastic.Out, true, 100, -1, true);
         }
         //var frameNames = Phaser.Animation.generateFrameNames('potatoe', 0, 24, '', 4);
         //potatoes.callAll('animations.add', 'animations', 'swim', frameNames, 30, true, false);
@@ -222,8 +223,8 @@ Play.prototype = {
                 potatoName_position[position_potato[g].name] = g;
             }
 
-            console.log(updatedPots);
-            console.log(sortedPotatoes);
+            // console.log(updatedPots);
+            // console.log(sortedPotatoes);
 
             //reset conditions
             chosenPots[0].tint = 0xffffff;
@@ -250,7 +251,12 @@ Play.prototype = {
                 highscore = Math.max(score, highscore);
                 localStorage.setItem(highscorer, highscore);
 
-                scoreText = game.add.text(500, 100, "Your Score:\n" + score + "\nBest Score:\n" + highscore);
+                var style = {
+                    font: "28px Comfortaa",
+                    fill: "#ffffff"
+                };
+
+                scoreText = game.add.text(500, 100, "Your Score:\n" + score + "\nBest Score:\n" + highscore, style);
 
                 var replay = game.add.button(game.world.centerX, game.world.centerY, 'replay');
                 replay.onInputDown.add(this.replay);
