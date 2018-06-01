@@ -27,12 +27,6 @@ var highscorer = 'player';
 var count = 0;
 
 WebFontConfig = {
-    //  'active' means all requested fonts have finished loading
-    //  We set a 1 second delay before calling 'createText'.
-    //  For some reason if we don't the browser cannot render the text the first time it's created.
-    active: function() {
-        game.time.events.add(Phaser.Timer.SECOND, this.createText, this);
-    },
 
     //  The Google Fonts we want to load (specify as many as you like in the array)
     google: {
@@ -45,7 +39,7 @@ Play.prototype = {
 
     preload: function() {
         //game.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
-        game.load.spritesheet('replay', '/assets/grass.png', 190, 70);
+        game.load.spritesheet('replay', 'assets/grass.png', 190, 70);
 
         //  Load the Google WebFont Loader script
         game.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
@@ -105,13 +99,7 @@ Play.prototype = {
             potato.name = 'pot' + i;
             potato.events.onInputDown.add(this.onClick);
             potato.body.velocity.x = (1 - scaleFactor) * 10;
-            // potato.body.collideWorldBounds = true;
-            // potato.checkWorldBounds = true;
-            // potato.events.onOutOfBounds.add(function(){
-            //     alert('Game over!');
-            //     location.reload();
-            // }, this);
-            //used for comparison
+            
             sortedPotatoes.push(potato.scale.x);
 
             //create maps of potato names and their positions
@@ -151,12 +139,12 @@ Play.prototype = {
             potato.tint = 0xff0000;
             counter += 1;
             chosenPots.push(potato);
-            //console.log(potato.name);
+
         } else if (potato.tint === 0xff0000 && counter <= 2) {
             potato.tint = 0xffffff;
             counter -= 1;
             chosenPots.pop();
-            //console.log(potato.name);
+
         }
     },
 
@@ -179,22 +167,20 @@ Play.prototype = {
         game.physics.arcade.collide(potatoes, potatoes);
 
         potatoes.forEach(function(child) {
-            // console.log(child.y);
 
             if (child.x >= (game.width - 150)) {
                 count += 1;
-                //console.log(count);
-                //console.log(timer);
+
                 if (count > 20) {
                     cautionText.alpha = 0;
-                    // console.log("yo");
+
                     if (count === 40) {
                         count = 0;
                     }
                 } else {
                     cautionText.alpha = 1;
                 }
-                //t.visible = !t.visible;
+
             }
 
             if (child.x > (game.width + 30)) {
@@ -204,31 +190,18 @@ Play.prototype = {
                 this.bgMusic.stop();
                 this.game.state.start('gameover');
             }
-            // child.checkWorldBounds = true;
-            // child.events.onOutOfBounds.add(function(){
-            //  console.log("hhoho");
-            //  }, this);
+
         });
-        // else if (playerSteps > 10){
-        //     score = 0;
-        //     playerSteps = 0;
-        //     updatedPots = [];
-        //     this.game.state.start('menu');
-        //
-        // }
+
         if (swapKey.isDown && chosenPots.length === 2) {
 
             swapSound.play();
 
             var firstPotName = chosenPots[0].name;
             var secondPotName = chosenPots[1].name;
-            // console.log("first name " + firstPotName);
-            // console.log("second name " + secondPotName);
 
             var firstPosition = potatoName_position[firstPotName];
             var secondPosition = potatoName_position[secondPotName];
-            // console.log("first position " + firstPosition);
-            // console.log("second position " + secondPosition);
 
             //swapping y positions of selected potatoes
             var tempPos = chosenPots[0].x;
