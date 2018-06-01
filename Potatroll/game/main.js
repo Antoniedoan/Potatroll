@@ -1,4 +1,4 @@
-var game = new Phaser.Game(550, 700, Phaser.CANVAS, 'Potatroll');
+var game = new Phaser.Game("100%", "100%", Phaser.CANVAS, 'Potatroll');
 
 //global variables
 
@@ -8,7 +8,7 @@ game.state.add('preload', Preload);
 game.state.add('menu', Menu);
 game.state.add('play', Play);
 game.state.add('winning', Winning);
-//game.state.add('gameover', GameOver);
+game.state.add('gameover', GameOver);
 
 
 game.state.start('boot');

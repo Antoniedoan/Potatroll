@@ -5,7 +5,7 @@ var bg;
 var swapKey;
 
 var potatoes = [];
-var numOfPots = 7;
+var numOfPots = 8;
 var sortedPotatoes = [];
 var counter = 0;
 
@@ -16,7 +16,15 @@ var position_potato = {};
 var potatoName_position = {};
 var stepText;
 var steps = numOfPots - 1;
+var playerSteps = 0;
 var score = 0;
+var bgMusic;
+var swapSound;
+var scoreText;
+var cautionText;
+var highscore;
+var highscorer = 'player';
+var count = 0;
 
 // WebFontConfig = {
 //     //  'active' means all requested fonts have finished loading
@@ -34,6 +42,7 @@ var score = 0;
 Play.prototype = {
   preload: function() {
     //game.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
+    game.load.spritesheet('replay', '/assets/grass.png', 190, 70);
   },
 
   create: function() {
@@ -42,6 +51,9 @@ Play.prototype = {
     game.physics.startSystem(Phaser.Physics.ARCADE);
 
     bg = game.add.tileSprite(0, 0, game.width, game.height, 'background');
+    //bg.anchor.setTo(1, 1);
+    bg.tileScale.setTo(1, 0.16);
+    bg.smoothed = false;
     potatoes = game.add.group();
     potatoes.inputEnableChildren = true;
     swapKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
@@ -51,20 +63,36 @@ Play.prototype = {
       font: "28px",
       fill: "#fff"
     };
-    stepText = game.add.text(450, 40, "Step:\t" + steps, style);
+    stepText = game.add.text(450, 40, "Swap:\t" + playerSteps, style);
     stepText.anchor.set(0.5);
     stepText.inputEnabled = true;
     stepText.events.onInputOver.add(this.over);
     stepText.events.onInputOut.add(this.out);
 
+    bgMusic = game.add.audio('bgMusic');
+    swapSound = game.add.audio('swapSound');
+    swapSound.volume = 0.1;
+
+    bgMusic.play();
+    bgMusic.loopFull();
+
+    highscore = localStorage.getItem(highscorer) == null ? 0 : localStorage.getItem(highscorer);
+
+    var style2 = { font: "100px Arial", fill: "#ff0000", align: "center" };
+    cautionText = game.add.text(game.width - 70, game.world.centerY - 200, '!!', style2);
+    cautionText.anchor.setTo(0.5, 0.5);
+    cautionText.angle = -20;
+    cautionText.alpha = 0;
+
     //creating a group of potatoes
     for (var i = 0; i < numOfPots; i++) {
-      var potato = potatoes.create(game.world.centerX, 80 * (i + 1), 'potato');
-      var scaleFactor = 0.2 * Math.random() + 0.05;
+      var potato = potatoes.create(100 * (i + 1), game.world.centerY, 'potato');
+      potato.anchor.setTo(0.5, 1);
+      var scaleFactor = 0.3 * Math.random() + 0.06;
       potato.scale.set(scaleFactor);
       potato.name = 'pot' + i;
       potato.events.onInputDown.add(this.onClick);
-      potato.body.velocity.y = -(1 - scaleFactor) * 2;
+      potato.body.velocity.x = (1 - scaleFactor) * 10;
       // potato.body.collideWorldBounds = true;
       // potato.checkWorldBounds = true;
       // potato.events.onOutOfBounds.add(function(){
@@ -78,10 +106,17 @@ Play.prototype = {
       position_potato[i] = potato;
       potatoName_position[potato.name] = i;
     }
+    //var frameNames = Phaser.Animation.generateFrameNames('potatoe', 0, 24, '', 4);
+    //potatoes.callAll('animations.add', 'animations', 'swim', frameNames, 30, true, false);
+
+    //  Here we just say 'play the swim animation', this time the 'play' method exists on the child itself, so we can set the context to null.
+    //potatoes.callAll('play', null, 'swim');
+    // potatoes.animations.add('swim');
+    //potatoes.animations.play('swim', 30, true);
 
     //sort scales descendingly
     sortedPotatoes.sort(function(a, b) {
-      return b - a;
+      return a-b;
     });
 
 
@@ -113,14 +148,65 @@ Play.prototype = {
     }
   },
 
+  replay: function (){
+    // if(this.game.input.activePointer.justPressed()) {
+    updatedPots = [];
+    sortedPotatoes = []
+    this.game.state.start('play');
+    // }
+  },
+
   update: function() {
     //scrolling background
-    bg.tilePosition.y += 1;
+    bg.tilePosition.x -= 1;
 
     //var for constantly checking scale values
     var updatedPots = [];
 
+    //check losing
+    game.physics.arcade.collide(potatoes, potatoes);
+
+    potatoes.forEach(function(child) {
+            // console.log(child.y);
+
+      if (child.x >= (game.width - 150)){
+          count += 1;
+          //console.log(count);
+          //console.log(timer);
+          if (count > 20) {
+            cautionText.alpha = 0;
+            // console.log("yo");
+            if (count === 40){
+              count = 0;
+            }
+          } else {
+            cautionText.alpha = 1;
+          }
+          //t.visible = !t.visible;
+      }
+
+      if (child.x > (game.width + 30)) {
+          score = 0;
+          playerSteps = 0;
+          updatedPots = [];
+          this.bgMusic.stop();
+          this.game.state.start('gameover');
+      }
+      // child.checkWorldBounds = true;
+      // child.events.onOutOfBounds.add(function(){
+      //  console.log("hhoho");
+      //  }, this);
+    });
+    // else if (playerSteps > 10){
+    //     score = 0;
+    //     playerSteps = 0;
+    //     updatedPots = [];
+    //     this.game.state.start('menu');
+    //
+    // }
     if (swapKey.isDown && chosenPots.length === 2) {
+
+      swapSound.play();
 
       var firstPotName = chosenPots[0].name;
       var secondPotName = chosenPots[1].name;
@@ -133,9 +219,9 @@ Play.prototype = {
       // console.log("second position " + secondPosition);
 
       //swapping y positions of selected potatoes
-      var tempPos = chosenPots[0].y;
-      chosenPots[0].y = chosenPots[1].y;
-      chosenPots[1].y = tempPos;
+      var tempPos = chosenPots[0].x;
+      chosenPots[0].x = chosenPots[1].x;
+      chosenPots[1].x = tempPos;
 
       //swapping them in the checking array
       var tempPot = position_potato[firstPosition];
@@ -159,24 +245,32 @@ Play.prototype = {
       chosenPots[1].tint = 0xffffff;
       chosenPots = [];
       counter = 0;
-      steps--;
-      stepText.setText("Step:\t" + steps);
+      playerSteps++;
+      stepText.setText("Swap:\t" + playerSteps);
 
       //check winning
+
       if (updatedPots.length === sortedPotatoes.length && updatedPots.every(function(v, i) {
           return v === sortedPotatoes[i]
-        }) && steps >=0) {
-        //console.log(filledPotatoes);
-          steps = numOfPots - 1;
-          this.game.state.start('winning');
+        })) {
+
+          score = 100*numOfPots + (steps - playerSteps)*30;
+
+          playerSteps = 0;
+
+          potatoes.forEach(function(child){
+            child.body.velocity.x = 0;
+          });
+
+          highscore = Math.max(score, highscore);
+          localStorage.setItem(highscorer, highscore);
+
+          scoreText = game.add.text(500, 100, "Your Score:\n"+ score +"\nBest Score:\n"+ highscore);
+
+          var replay = game.add.button(game.world.centerX, game.world.centerY, 'replay');
+          replay.onInputDown.add(this.replay);
       }
-      //check losing
-      else if (steps === 0 && !(updatedPots.every(function(v, i) {
-          return v === sortedPotatoes[i]
-        }))) {
-          steps = numOfPots - 1;
-          this.game.state.start('menu');
-      }
+
       //while playing
       else {
         updatedPots = [];

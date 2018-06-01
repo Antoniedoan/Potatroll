@@ -3,21 +3,24 @@ var Preload = function (game){};
 
 Preload.prototype = {
   preload: function() {
-    var loader = this.add.sprite(this.game.world.centerX-100, this.game.world.centerY, 'preloader');
+    var loader = this.add.sprite(this.game.world.centerX, this.game.world.centerY, 'preloader');
     loader.anchor.setTo(0.5, 0.5);
 
     this.load.onLoadComplete.addOnce(this.onLoadComplete, this);
     this.load.setPreloadSprite(loader);
-    //this.load.image('menu', 'assets/menu.jpg');
 
-    this.load.image('background', 'assets/grass.png');
-    this.load.image('instruction', 'assets/potato_spuds.png');
+    //add images
+    this.load.image('background', 'assets/sorting game background tiled.png');
+    this.load.image('instruction1', 'assets/sorting game background-01.jpg');
+    this.load.image('instruction2', 'assets/sorting game background-02.jpg');
     this.load.image('potato', 'assets/1potato.png');
-    //this.load.image('arrow', 'assets/arrowleft.png');
-    // this.load.image('creature_1', 'assets/creature_1.png');
-    // this.load.image('creature_2', 'assets/creature_2.png');
-    // this.load.image('creature_3', 'assets/creature_3.png');
-    // this.load.image('gameover', 'assets/gameover.jpg');
+    this.load.image('invisible', 'assets/transparentbg.png');
+    this.load.image('roast', 'assets/roast.png');
+
+    //add audio
+    this.load.audio('bgMusic', 'assets/bodenstaendig.mp3');
+    this.load.audio('swapSound', 'assets/Mario_jump.mp3');
+
   },
   create: function() {
     //this.game.add.sprite(0, 0, window.innerWidth, window.innerHeight, 'background');
