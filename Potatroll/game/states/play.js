@@ -30,7 +30,7 @@ WebFontConfig = {
 
     //  The Google Fonts we want to load (specify as many as you like in the array)
     google: {
-        families: ['Finger Paint', 'Comfortaa']
+        families: ['IM Fell English', 'Cardo', 'Comfortaa']
     }
 
 };
@@ -38,9 +38,6 @@ WebFontConfig = {
 Play.prototype = {
 
     preload: function() {
-        //game.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
-        game.load.spritesheet('replay', 'assets/grass.png', 190, 70);
-
 
     },
 
@@ -60,7 +57,7 @@ Play.prototype = {
         potatoes.enableBody = true;
 
         var style = {
-            font: "28px Comfortaa",
+            font: "3em Cardo",
             fill: "#ffffff"
         };
 
@@ -250,13 +247,15 @@ Play.prototype = {
                 localStorage.setItem(highscorer, highscore);
 
                 var style = {
-                    font: "28px Comfortaa",
+                    font: "28px Cardo",
+                    align: "center",
                     fill: "#ffffff"
                 };
 
                 scoreText = game.add.text(500, 100, "Your Score:\n" + score + "\nBest Score:\n" + highscore, style);
 
                 var replay = game.add.button(game.world.centerX, game.world.centerY, 'replay');
+                replay.scale.set(0.2);
                 replay.onInputDown.add(this.replay);
             }
 

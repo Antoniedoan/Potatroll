@@ -16,6 +16,7 @@ Preload.prototype = {
     this.load.image('potato', 'assets/1potato.png');
     this.load.image('invisible', 'assets/transparentbg.png');
     this.load.image('roast', 'assets/roast.png');
+    game.load.image('replay', 'assets/replay button.png');
 
     //add audio
     this.load.audio('bgMusic', 'assets/bodenstaendig.mp3');
