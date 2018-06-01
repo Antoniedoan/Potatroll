@@ -1,17 +1,21 @@
 var Play = function(game) {}
 
+WebFontConfig = {
+    //  The Google Fonts we want to load (specify as many as you like in the array)
+    google: {
+        families: ['IM Fell English', 'Cardo', 'Comfortaa']
+    }
+};
 //declare variables
 var bg;
 var swapKey;
-
+var win1, win2, win3, king;
 var potatoes = [];
 var numOfPots = 8;
 var sortedPotatoes = [];
 var counter = 0;
-
 var chosenPots = [];
 var potID = '';
-
 var position_potato = {};
 var potatoName_position = {};
 var stepText;
@@ -25,80 +29,88 @@ var cautionText;
 var highscore;
 var highscorer = 'player';
 var count = 0;
+var winSound;
 
-// WebFontConfig = {
-//     //  'active' means all requested fonts have finished loading
-//     //  We set a 1 second delay before calling 'createText'.
-//     //  For some reason if we don't the browser cannot render the text the first time it's created.
-//     active: function() { game.time.events.add(Phaser.Timer.SECOND, this.createText, this); },
-//
-//     //  The Google Fonts we want to load (specify as many as you like in the array)
-//     google: {
-//       families: ['Finger Paint']
-//     }
-//
-// };
+var style3 = {
+            font: "40px IM Fell English",
+            fill: 0x000000,
+            align: "center"
+        };
+var style = {
+            font: "40px IM Fell English"
+        };
+
+var style2 = {
+            font: "100px Arial",
+            fill: "#ff0000",
+            align: "center"
+        };
 
 Play.prototype = {
   preload: function() {
-    //game.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
-    game.load.spritesheet('replay', '/assets/grass.png', 190, 70);
   },
 
   create: function() {
-
+    //game environment
     game.world.setBounds(0, 0, game.height - 300, game.width - 300);
     game.physics.startSystem(Phaser.Physics.ARCADE);
 
     bg = game.add.tileSprite(0, 0, game.width, game.height, 'background');
-    //bg.anchor.setTo(1, 1);
-    bg.tileScale.setTo(1, 0.16);
+    bg.tileScale.setTo(1, 0.17);
     bg.smoothed = false;
-    potatoes = game.add.group();
-    potatoes.inputEnableChildren = true;
-    swapKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-    potatoes.enableBody = true;
 
-    var style = {
-      font: "28px",
-      fill: "#fff"
-    };
-    stepText = game.add.text(450, 40, "Swap:\t" + playerSteps, style);
+    //adding sprites
+    win1 = game.add.sprite(-500, 220, 'win1');
+    win1.anchor.set(0.5);
+    win1.scale.setTo(0.4, 0.4);
+    win2 = game.add.sprite(1850, 220, 'win2');
+    win2.anchor.set(0.5);
+    win2.scale.setTo(0.4, 0.4);
+    win3 = game.add.sprite(200, -550, 'win3');
+    win3.anchor.set(0.5);
+    win3.scale.setTo(0.2, 0.2);
+    king = game.add.sprite(-550, 300, 'king');
+    king.anchor.set(0.5);
+    king.scale.set(0.25);
+
+    //show num of swaps
+    stepText = game.add.text(game.width - 120, 40, "Swap:\t" + playerSteps, style);
     stepText.anchor.set(0.5);
-    stepText.inputEnabled = true;
-    stepText.events.onInputOver.add(this.over);
-    stepText.events.onInputOut.add(this.out);
+    // stepText.inputEnabled = true;
+    // stepText.events.onInputOver.add(this.over);
+    // stepText.events.onInputOut.add(this.out);
 
+    //audio
+    winHighscore = game.add.audio('winHighscore');
+    winSound = game.add.audio('win');
     bgMusic = game.add.audio('bgMusic');
     swapSound = game.add.audio('swapSound');
-    swapSound.volume = 0.1;
+    swapSound.volume = 0.8;
 
     bgMusic.play();
     bgMusic.loopFull();
 
+    swapKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
     highscore = localStorage.getItem(highscorer) == null ? 0 : localStorage.getItem(highscorer);
 
-    var style2 = { font: "100px Arial", fill: "#ff0000", align: "center" };
     cautionText = game.add.text(game.width - 70, game.world.centerY - 200, '!!', style2);
     cautionText.anchor.setTo(0.5, 0.5);
     cautionText.angle = -20;
     cautionText.alpha = 0;
 
     //creating a group of potatoes
+    potatoes = game.add.group();
+    potatoes.inputEnableChildren = true;
+    potatoes.enableBody = true;
     for (var i = 0; i < numOfPots; i++) {
-      var potato = potatoes.create(100 * (i + 1), game.world.centerY, 'potato');
+      var potato = potatoes.create(100 * (i + 1), game.world.centerY + 50, 'potato');
       potato.anchor.setTo(0.5, 1);
       var scaleFactor = 0.3 * Math.random() + 0.06;
       potato.scale.set(scaleFactor);
       potato.name = 'pot' + i;
       potato.events.onInputDown.add(this.onClick);
-      potato.body.velocity.x = (1 - scaleFactor) * 10;
-      // potato.body.collideWorldBounds = true;
-      // potato.checkWorldBounds = true;
-      // potato.events.onOutOfBounds.add(function(){
-      //     alert('Game over!');
-      //     location.reload();
-      // }, this);
+      potato.body.velocity.x = (1 - scaleFactor) * 35;
+
       //used for comparison
       sortedPotatoes.push(potato.scale.x);
 
@@ -106,41 +118,33 @@ Play.prototype = {
       position_potato[i] = potato;
       potatoName_position[potato.name] = i;
     }
-    //var frameNames = Phaser.Animation.generateFrameNames('potatoe', 0, 24, '', 4);
-    //potatoes.callAll('animations.add', 'animations', 'swim', frameNames, 30, true, false);
 
-    //  Here we just say 'play the swim animation', this time the 'play' method exists on the child itself, so we can set the context to null.
-    //potatoes.callAll('play', null, 'swim');
-    // potatoes.animations.add('swim');
-    //potatoes.animations.play('swim', 30, true);
-
-    //sort scales descendingly
+    //sort scales ascendingly
     sortedPotatoes.sort(function(a, b) {
       return a-b;
     });
 
-
   },
-  over: function(item) {
-    var grd = stepText.context.createLinearGradient(0, 0, 0, stepText.height);
-
-    //  Add in 2 color stops
-    grd.addColorStop(0, '#8ED6FF');
-    grd.addColorStop(1, '#a3d3e6');
-    item.fill = grd;
-
-  },
-  out: function(item){
-    item.fill = "#fff";
-  },
+  // over: function(item) {
+  //   var grd = stepText.context.createLinearGradient(0, 0, 0, stepText.height);
+  //
+  //   //  Add in 2 color stops
+  //   grd.addColorStop(0, '#8ED6FF');
+  //   grd.addColorStop(1, '#a3d3e6');
+  //   item.fill = grd;
+  //
+  // },
+  // out: function(item){
+  //   item.fill = "#fff";
+  // },
 
   onClick: function(potato) {
     if (potato.tint === 0xffffff && counter < 2) {
-      potato.tint = 0xff0000;
+      potato.tint = 0x936949;
       counter += 1;
       chosenPots.push(potato);
       //console.log(potato.name);
-    } else if (potato.tint === 0xff0000 && counter <= 2) {
+    } else if (potato.tint === 0x936949 && counter <= 2) {
       potato.tint = 0xffffff;
       counter -= 1;
       chosenPots.pop();
@@ -157,22 +161,20 @@ Play.prototype = {
   },
 
   update: function() {
-    //scrolling background
+    //scrolling background non-stop
     bg.tilePosition.x -= 1;
 
     //var for constantly checking scale values
     var updatedPots = [];
 
-    //check losing
+    //ensure potatoes don't overtatke
     game.physics.arcade.collide(potatoes, potatoes);
 
+    //check losing
     potatoes.forEach(function(child) {
-            // console.log(child.y);
-
       if (child.x >= (game.width - 150)){
           count += 1;
-          //console.log(count);
-          //console.log(timer);
+          this.bgMusic.volume = 1.5;
           if (count > 20) {
             cautionText.alpha = 0;
             // console.log("yo");
@@ -182,31 +184,23 @@ Play.prototype = {
           } else {
             cautionText.alpha = 1;
           }
-          //t.visible = !t.visible;
       }
 
       if (child.x > (game.width + 30)) {
           score = 0;
           playerSteps = 0;
           updatedPots = [];
+          sortedPotatoes = [];
           this.bgMusic.stop();
           this.game.state.start('gameover');
       }
-      // child.checkWorldBounds = true;
-      // child.events.onOutOfBounds.add(function(){
-      //  console.log("hhoho");
-      //  }, this);
     });
-    // else if (playerSteps > 10){
-    //     score = 0;
-    //     playerSteps = 0;
-    //     updatedPots = [];
-    //     this.game.state.start('menu');
-    //
-    // }
+
     if (swapKey.isDown && chosenPots.length === 2) {
 
       swapSound.play();
+
+      //swapping mechanism
 
       var firstPotName = chosenPots[0].name;
       var secondPotName = chosenPots[1].name;
@@ -249,29 +243,54 @@ Play.prototype = {
       stepText.setText("Swap:\t" + playerSteps);
 
       //check winning
-
       if (updatedPots.length === sortedPotatoes.length && updatedPots.every(function(v, i) {
           return v === sortedPotatoes[i]
         })) {
 
           score = 100*numOfPots + (steps - playerSteps)*30;
-
           playerSteps = 0;
-
+          bgMusic.stop();
+          cautionText.destroy();
           potatoes.forEach(function(child){
             child.body.velocity.x = 0;
           });
 
-          highscore = Math.max(score, highscore);
-          localStorage.setItem(highscorer, highscore);
+          var playAgain = game.add.sprite(game.world.centerX + 400, game.world.centerY - 135, 'playAgain');
+          playAgain.scale.set(0.17);
+          playAgain.alpha = 0;
+          playAgain.inputEnabled = true;
 
-          scoreText = game.add.text(500, 100, "Your Score:\n"+ score +"\nBest Score:\n"+ highscore);
+          if (score > highscore){
+            winHighscore.play();
+            highscore = score;
+            localStorage.setItem(highscorer, highscore);
+            var congratsText = game.add.text(510, -250, "Well Done", {font: "80px IM Fell English", fill: "#ffffff"});
+            game.add.tween(congratsText).to({y:50}, 2000, Phaser.Easing.Bounce.Out, true);
 
-          var replay = game.add.button(game.world.centerX, game.world.centerY, 'replay');
-          replay.onInputDown.add(this.replay);
+            scoreText = game.add.text(555, 150, "New Highscore:\n"+ highscore, style3);
+
+            game.add.tween(king).to({x: 250}, 1000, Phaser.Easing.Linear.None, true);
+
+            playAgain.x = 654;
+            playAgain.alpha = 1;
+          }
+          else {
+            game.add.tween(win1).to( { x: 1100 }, 2000, Phaser.Easing.Bounce.Out, true);
+            game.add.tween(win2).to( { x: 850 }, 2000, Phaser.Easing.Bounce.Out, true);
+            game.add.tween(win3).to( { y: 250 }, 1500, Phaser.Easing.Linear.None, true);
+
+            winSound.play();
+
+            scoreText = game.add.text(480, 80, "Your Score:\n"+ score +"\nBest Score:\n"+ highscore, style3);
+
+            playAgain.x = 540;
+            playAgain.alpha = 1;
+          }
+
+          playAgain.events.onInputDown.add(this.replay);
       }
 
-      //while playing
+      //while still playing
       else {
         updatedPots = [];
       }
