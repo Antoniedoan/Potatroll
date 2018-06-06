@@ -1,4 +1,5 @@
 var GameOver = function(game){}
+
 WebFontConfig = {
     //  The Google Fonts we want to load (specify as many as you like in the array)
     google: {
@@ -16,6 +17,7 @@ var style4 = {
 var roastPot1;
 var roastPot2;
 var countee = 0;
+
 GameOver.prototype = {
   preload: function () {
   },
@@ -43,7 +45,7 @@ GameOver.prototype = {
       this.game.state.start('play');
     });
   },
-  
+
   update: function() {
     countee+=1;
     console.log(counter);
